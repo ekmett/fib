@@ -6,10 +6,14 @@ add_compile_options(-std=c++11)
 set(Boost_USE_STATIC_LIBS OFF) 
 set(Boost_USE_MULTITHREADED ON)  
 set(Boost_USE_STATIC_RUNTIME OFF) 
-find_package(Boost 1.63.0 COMPONENTS context)
+find_package(Boost 1.62.0 COMPONENTS context)
 
 if(Boost_FOUND)
-    include_directories(${Boost_INCLUDE_DIRS}) 
-    add_library(fib worker.cpp) 
-    target_link_libraries(fib ${Boost_LIBRARIES})
+  include_directories(${Boost_INCLUDE_DIRS}) 
+endif()
+
+add_library(fib worker.cpp) 
+
+if(Boost_FOUND)
+  target_link_libraries(fib ${Boost_LIBRARIES})
 endif()
