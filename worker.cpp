@@ -28,7 +28,7 @@ namespace fib {
         task * tp = p.s[i].data.load(std::memory_order_relaxed);
         while (t == nullptr) {
           // unemployed
-          this_thread::yield();
+          std::this_thread::yield();
           if (p.shutdown.load(std::memory_order_relaxed)) return; // check for pool shutdown
           tp = p.s[i].data.load(std::memory_order_relaxed);
         }
