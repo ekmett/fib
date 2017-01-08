@@ -29,7 +29,7 @@ install:
  - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
  - mkdir -p ${DEPS_DIR} && cd ${DEPS_DIR}
  - if [[ "${BOOST_VERSION}" == "" ]]; then BOOST_VERSION=1.62.0; fi
- - if [[ "${CC}" != "" ]]; then export CXX=${CC}; fi
+ - if [[ "${CC}" != "" ]]; then export CXX=${CC}; export CMAKE_CXX_COMPILER=${CC}; fi
  # install modern boost
  - |
    if [[ "${BOOST_VERSION}" != "" ]]; then
