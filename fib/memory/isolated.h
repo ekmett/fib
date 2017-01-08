@@ -4,9 +4,12 @@
 #include <cstddef>
 #include <utility>
 
+/// @file fib/memory/isolated.h
+/// @brief provides @ref fib::memory::isolated
+
 namespace fib {
   namespace memory {
-    /// isolated<T> tries to ensure that T gets its own cache line.
+    /// @brief @ref isolated<T> tries to ensure that T gets its own cache line.
     /// @param T type
     /// @param N padding_bytes
     template <typename T, std::size_t N = 64> 

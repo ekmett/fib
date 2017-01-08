@@ -11,6 +11,7 @@
 #include "memory/isolated.h"
 
 /// @file worker.h
+/// @brief @ref fib::worker and @ref fib::pool
 
 namespace fib {
 

@@ -5,7 +5,12 @@
 #include "fib/worker.h"
 
 /// @file fib.h
-/// @brief namespace @ref fib
+/// @brief @ref fib
+
+/// @package fib
+/// @brief a library for light-weight fibers and polling io
 
 /// @namespace fib
 /// @brief light-weight fibers and work-stealing
+
+

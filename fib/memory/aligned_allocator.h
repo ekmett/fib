@@ -4,6 +4,9 @@
 
 #include "fib/attribute.h"
 
+/// @file fib/memory/aligned_allocator.h
+/// @brief provides @ref fib::memory::aligned_allocator
+
 namespace fib {
   namespace memory {
     namespace detail {
@@ -17,7 +20,8 @@ namespace fib {
     /// @param alignment minimum alignment
     template <typename T, size_t alignment = 32>
     struct aligned_allocator;
-  
+
+    /// @cond PRIVATE
     template <size_t alignment>
     struct aligned_allocator<void, alignment> {
       typedef void*             pointer;
@@ -26,6 +30,7 @@ namespace fib {
   
       template <class U> struct rebind { typedef aligned_allocator<U, alignment> other; };
     };
+    /// @endcond
   
     template <typename T, size_t alignment> struct aligned_allocator {
       typedef T         value_type;
@@ -38,7 +43,9 @@ namespace fib {
   
       typedef std::true_type propagate_on_container_move_assignment;
   
+      /// @cond PRIVATE
       template <class U> struct rebind { typedef aligned_allocator<U, alignment> other; };
+      /// @endcond
   
       aligned_allocator() noexcept {}
   
@@ -74,6 +81,7 @@ namespace fib {
       void destroy(pointer p) { p->~T(); }
     };
   
+    /// @cond PRIVATE
     template <typename T, size_t alignment> struct aligned_allocator<const T, alignment> {
   
       typedef T         value_type;
@@ -116,6 +124,7 @@ namespace fib {
   
       void destroy(pointer p) { p->~T(); }
     };
+    // @endcond
   
     template <typename T, size_t Talignment, typename U, size_t Ualignment>
     inline bool operator== (const aligned_allocator<T, Talignment>&, const aligned_allocator<U, Ualignment>&) noexcept {
