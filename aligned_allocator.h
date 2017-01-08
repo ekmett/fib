@@ -6,7 +6,7 @@
 
 namespace fib {
   namespace detail {
-    FIB_DECLSPEC_NOALIAS FIB_DECLSPEC_RESTRICT void* allocate_aligned_memory(size_t align, size_t size) FIB_ATTRIBUTE_ALLOC_ALIGN(1) FIB_ATTRIBUTE_ALLOC_SIZE(2);
+    FIB_DECLSPEC_NOALIAS FIB_DECLSPEC_RESTRICT void* allocate_aligned_memory(size_t align, size_t size) FIB_ATTRIBUTE_ALLOC_ALIGN(1) FIB_ATTRIBUTE_ALLOC_SIZE(2) FIB_ATTRIBUTE_MALLOC FIB_ATTRIBUTE_RETURNS_NONNULL;
     void deallocate_aligned_memory(void* ptr) noexcept;
   }
 
@@ -51,7 +51,7 @@ namespace fib {
       return std::addressof(x);
     }
 
-    FIB_DECLSPEC_NOALIAS FIB_DECLSPEC_RESTRICT pointer allocate(size_type n, typename aligned_allocator<void, alignment>::const_pointer = 0) {
+    FIB_DECLSPEC_NOALIAS FIB_DECLSPEC_RESTRICT pointer allocate(size_type n, typename aligned_allocator<void, alignment>::const_pointer = 0) FIB_ATTRIBUTE_MALLOC FIB_RETURNS_NONNULL {
       void* ptr = detail::allocate_aligned_memory(alignment, n * sizeof(T));
       if (ptr == nullptr) throw std::bad_alloc();      
       return reinterpret_cast<pointer>(ptr);
@@ -95,12 +95,9 @@ namespace fib {
       return std::addressof(x);
     }
 
-    FIB_DECLSPEC_NOALIAS FIB_DECLSPEC_RESTRICT pointer allocate(size_type n, typename aligned_allocator<void, alignment>::const_pointer = 0) {
+    FIB_DECLSPEC_NOALIAS FIB_DECLSPEC_RESTRICT pointer allocate(size_type n, typename aligned_allocator<void, alignment>::const_pointer = 0) FIB_ATTRIBUTE_MALLOC FIB_RETURNS_NONNULL {
       void* ptr = detail::allocate_aligned_memory(alignment, n * sizeof(T));
-      if (ptr == nullptr) {
-        throw std::bad_alloc();
-      }
-
+      if (ptr == nullptr) throw std::bad_alloc();
       return reinterpret_cast<pointer>(ptr);
     }
 
