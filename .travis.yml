@@ -13,6 +13,26 @@ matrix:
       env: CMAKE_CXX_COMPILER=clang++
 
     - os: linux
+      compiler: g++
+      dist: trusty
+      env: CMAKE_CXX_COMPILER=g++
+      addons:
+        apt:
+          packages:
+            - libboost-context-dev
+            - libevent-dev
+
+    - os: linux
+      compiler: clang++
+      dist: trusty
+      env: CMAKE_CXX_COMPILER=clang++
+      addons:
+        apt:
+          packages:
+            - libboost-context-dev
+            - libevent-dev
+
+    - os: linux
       compiler: g++-6
       dist: trusty
       env: CMAKE_CXX_COMPILER=g++-6
