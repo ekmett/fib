@@ -6,16 +6,15 @@ matrix:
   include:
     - os: osx
       compiler: g++
-      env: COMPILER=g++
 
     - os: osx
       compiler: clang++
-      env: COMPILER=clang++ DOCS=ON
+      env: DOCS=ON
 
     - os: linux
       compiler: g++
       dist: trusty
-      env: COMPILER=g++ DOCS=ON
+      env: DOCS=ON
       addons:
         apt:
           packages:
@@ -26,7 +25,6 @@ matrix:
     - os: linux
       compiler: clang++
       dist: trusty
-      env: COMPILER=clang++
       addons:
         apt:
           packages:
@@ -46,19 +44,19 @@ matrix:
 #          sources:
 #            - ubuntu-toolchain-r-test
 #
-#    - os: linux
-#      compiler: clang++-3.6
-#      dist: trusty
-#      env: COMPILER=clang++-3.6
-#      addons:
-#        apt:
-#          packages:
-#            - clang-3.6
-#            - libboost-context-dev
-#            - libevent-dev
-#          sources:
-#            - ubuntu-toolchain-r-test
-#            - llvm-toolchain-precise-3.6
+    - os: linux
+      compiler: clang++-3.6
+      dist: trusty
+      env: COMPILER=clang++-3.6
+      addons:
+        apt:
+          packages:
+            - clang-3.6
+            - libboost-context-dev
+            - libevent-dev
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise-3.6
 #
 #    - os: linux
 #      compiler: clang++-3.7
@@ -75,8 +73,8 @@ matrix:
 #            - llvm-toolchain-precise-3.7
 
 before_install:
- - echo ${CC}
- - ${COMPILER} -v
+ - if [[ "${COMPILER}" != "" ]]; then export CXX=${COMPILER}; fi
+ - ${CXX} -v
  - cmake --version
 
 install:
@@ -96,7 +94,7 @@ install:
 script:
  - mkdir build
  - cd build
- - cmake ${CMAKE_OPTIONS} -DCMAKE_CXX_COMPILER="${COMPILER}" .. && make
+ - cmake ${CMAKE_OPTIONS} -DCMAKE_CXX_COMPILER="${CXX}" .. && make
 
 notifications:
   irc:
