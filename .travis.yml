@@ -12,24 +12,24 @@ cache:
 matrix:
   include:
     - os: osx
-      env: BOOST_VERSION=default
       compiler: g++
     - os: osx
-      env: BOOST_VERSION=default
       compiler: clang++
     - os: linux
-      env: BOOST_VERSION=default COMPILER=g++-6
       compiler: g++-6
       addons: { apt: { packages: [g++-6], sources: [ubuntu-toolchain-r-test]}}
     - os: linux
-      env: BOOST_VERSION=default
-      compiler: clang++
+      addons: { apt: { packages: [clang-3.6], sources: [ubuntu-toolchain-r-test]}}
+      compiler: clang++-3.6
+    - os: linux
+      addons: { apt: { packages: [clang-3.7], sources: [ubuntu-toolchain-r-test]}}
+      compiler: clang++-3.7
 
 install:
  - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
  - mkdir -p ${DEPS_DIR} && cd ${DEPS_DIR}
- - if [[ "${BOOST_VERSION}" == "default" ]]; then BOOST_VERSION=1.62.0; fi
- - if [[ "${COMPILER}" != "" ]]; then export CXX=${COMPILER}; fi
+ - if [[ "${BOOST_VERSION}" == "" ]]; then BOOST_VERSION=1.62.0; fi
+ - if [[ "${CC}" != "" ]]; then export CXX=${CC}; fi
  # install modern boost
  - |
    if [[ "${BOOST_VERSION}" != "" ]]; then
