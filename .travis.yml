@@ -6,16 +6,16 @@ matrix:
   include:
     - os: osx
       compiler: g++
-      env: CMAKE_CXX_COMPILER=g++
+      env: COMPILER=g++
 
     - os: osx
       compiler: clang++
-      env: CMAKE_CXX_COMPILER=clang++
+      env: COMPILER=clang++
 
     - os: linux
       compiler: g++
       dist: trusty
-      env: CMAKE_CXX_COMPILER=g++
+      env: COMPILER=g++
       addons:
         apt:
           packages:
@@ -25,7 +25,7 @@ matrix:
     - os: linux
       compiler: clang++
       dist: trusty
-      env: CMAKE_CXX_COMPILER=clang++
+      env: COMPILER=clang++
       addons:
         apt:
           packages:
@@ -35,7 +35,7 @@ matrix:
     - os: linux
       compiler: g++-6
       dist: trusty
-      env: CMAKE_CXX_COMPILER=g++-6
+      env: COMPILER=g++-6
       addons:
         apt:
           packages:
@@ -48,7 +48,7 @@ matrix:
     - os: linux
       compiler: clang++-3.6
       dist: trusty
-      env: CMAKE_CXX_COMPILER=clang++-3.6
+      env: COMPILER=clang++-3.6
       addons:
         apt:
           packages:
@@ -62,7 +62,7 @@ matrix:
     - os: linux
       compiler: clang++-3.7
       dist: trusty
-      env: CMAKE_CXX_COMPILER=clang++-3.7
+      env: COMPILER=clang++-3.7
       addons:
         apt:
           packages:
@@ -74,8 +74,8 @@ matrix:
             - llvm-toolchain-precise-3.7
 
 before_install:
- - export CMAKE_CXX_COMPILER
- - ${CMAKE_CXX_COMPILER} -v
+ - echo ${CC}
+ - ${COMPILER} -v
  - cmake --version
 
 install:
@@ -88,7 +88,7 @@ install:
 script:
  - mkdir build
  - cd build
- - cmake ${CMAKE_OPTIONS} .. && make
+ - cmake -DCMAKE_CXX_COMPILER="${COMPILER}" .. && make
 
 notifications:
   irc:
