@@ -54,6 +54,7 @@ matrix:
             - llvm-toolchain-precise-3.7
 
 before_install:
+ - export CMAKE_CXX_COMPILER
  - ${CMAKE_CXX_COMPILER} -v
  - cmake --version
 
