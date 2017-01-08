@@ -6,6 +6,11 @@
 /// @defgroup declspecs __declspec support
 /// @{
 
+// disable __declspec support on clang entirely unless we have -fms-extensions turned on
+#if defined(__clang__) && !defined(_MSC_EXTENSIONS)
+#define __declspec(X)
+#endif
+
 /// @def __has_declspec_attribute(X)
 /// @brief clang's @p __has_declspec_attribute
 #ifndef __has_declspec_attribute

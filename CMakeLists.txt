@@ -28,7 +28,7 @@ find_package(Boost 1.47.0 REQUIRED COMPONENTS context)
 # libevent support
 find_package(Event REQUIRED)
 
-include_directories(${Boost_INCLUDE_DIRS} ${Event_INCLUDE_DIRS})
+include_directories(${CMAKE_SOURCE_DIR} ${Boost_INCLUDE_DIRS} ${Event_INCLUDE_DIRS})
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBOOST_DISABLE_ASSERTS")
-add_library(fib worker.cpp)
+add_library(fib fib.cpp fib/worker.cpp)
 target_link_libraries(fib ${Boost_LIBRARIES} ${Event_LIBRARIES})

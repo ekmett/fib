@@ -1,8 +1,5 @@
 #pragma once
 
-/// @file worker.h
-/// @brief work sharing
-
 #include <atomic>
 #include <deque>
 #include <functional>
@@ -13,20 +10,24 @@
 
 #include "memory/isolated.h"
 
+/// @file worker.h
+
 namespace fib {
 
   struct pool;
   struct worker;
 
+  /// something to do
   using task = std::function<void(worker&)>;
 
-  /// maximum number of workers allowed in any given pool.
+  /// The maximum number of workers allowed in any given pool.
   static const size_t max_workers = 16;
 
-  /// A member of a thread pool, replete with a local work-sharing deque.
+  /// @brief A member of a thread pool, replete with a local work-sharing deque.
   ///
   /// Never give this to another thread.
   /// Do not remember the current worker across blocking calls.
+
   // TODO: upgrade to support fibers
   struct worker {
     std::mt19937 rng;   ///< local random number generator to avoid having to go back to a central pool of randomness for sharing candidate selection
@@ -35,10 +36,10 @@ namespace fib {
     int i;              ///< worker id within the pool
     friend struct pool;
 
-    /// Enqueue a task. 
-    // TODO: Should we eagerly context switch and enqueue the current fiber instead?
+    /// Schedule a @p task.
     template <typename ... T, typename F> void spawn(F && f, T && ... args) {
-       q.push_back(new std::function<void(T...)>(std::forward(f), std::forward(args)...));
+       // TODO: Should we eagerly context switch and enqueue the current fiber instead?
+       q.push_back(task(std::forward(f), std::forward(args)...));
     }
   private:
     /// construct a new worker
@@ -49,8 +50,7 @@ namespace fib {
 
   /// a work-sharing thread pool
   struct pool {
-    /// Create a pool
-    ///
+    /// @brief Create a pool
     /// @param N number of workers
     /// @param rng random number generator used to seed local worker random number generators
     /// @param args the initial batch of tasks used to seed the pool
@@ -58,17 +58,21 @@ namespace fib {
 
     virtual ~pool();
 
-    int N;                                       ///< the number of actual workers
+    int N;                                               ///< the number of actual workers
     memory::isolated<std::atomic<task*>> s[max_workers]; ///< mailboxes for sharing work
-    std::vector<std::thread> threads;            ///< the threads that run the workers
-    std::atomic<bool> shutdown;                  ///< flag used to shut everything down gracefully
+    std::vector<std::thread> threads;                    ///< the threads that run the workers
+    std::atomic<bool> shutdown;                          ///< flag used to shut everything down gracefully
 
 private:
     std::vector<worker> workers; ///< direct handles to each of our workers. not for public consumption
   };
 
   namespace detail {
+    /// a placeholder task used to indicate lack of work
     struct dummy_task : task {
+      /// @brief The only instance of dummy_task.
+      ///
+      /// This task gets posted in a mailbox to indicate that the corresponding worker is looking for work
       static dummy_task instance;
     };
   };

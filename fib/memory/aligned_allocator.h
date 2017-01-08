@@ -1,6 +1,8 @@
 #pragma once
 
-#include "attribute.h"
+#include <memory>
+
+#include "fib/attribute.h"
 
 namespace fib {
   namespace memory {
@@ -54,7 +56,7 @@ namespace fib {
         return std::addressof(x);
       }
   
-      FIB_DECLSPEC_NOALIAS FIB_DECLSPEC_RESTRICT pointer allocate(size_type n, typename aligned_allocator<void, alignment>::const_pointer = 0) FIB_ATTRIBUTE_MALLOC FIB_RETURNS_NONNULL {
+      FIB_DECLSPEC_NOALIAS FIB_DECLSPEC_RESTRICT pointer allocate(size_type n, typename aligned_allocator<void, alignment>::const_pointer = 0) FIB_ATTRIBUTE_MALLOC FIB_ATTRIBUTE_RETURNS_NONNULL {
         void* ptr = detail::allocate_aligned_memory(alignment, n * sizeof(T));
         if (ptr == nullptr) throw std::bad_alloc();      
         return reinterpret_cast<pointer>(ptr);
@@ -98,7 +100,7 @@ namespace fib {
         return std::addressof(x);
       }
   
-      FIB_DECLSPEC_NOALIAS FIB_DECLSPEC_RESTRICT pointer allocate(size_type n, typename aligned_allocator<void, alignment>::const_pointer = 0) FIB_ATTRIBUTE_MALLOC FIB_RETURNS_NONNULL {
+      FIB_DECLSPEC_NOALIAS FIB_DECLSPEC_RESTRICT pointer allocate(size_type n, typename aligned_allocator<void, alignment>::const_pointer = 0) FIB_ATTRIBUTE_MALLOC FIB_ATTRIBUTE_RETURNS_NONNULL {
         void* ptr = detail::allocate_aligned_memory(alignment, n * sizeof(T));
         if (ptr == nullptr) throw std::bad_alloc();
         return reinterpret_cast<pointer>(ptr);

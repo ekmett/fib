@@ -1,15 +1,17 @@
 #pragma once
 
 #include <cstdint>
+#include <cstddef>
+#include <utility>
 
 namespace fib {
   namespace memory {
     /// isolated<T> tries to ensure that T gets its own cache line.
     /// @param T type
     /// @param N padding_bytes
-    template <typename T, size_t N = 64> 
+    template <typename T, std::size_t N = 64> 
     struct isolated {
-      static const size_t padding_bytes = N; ///< The number of bytes of padding before the item. The same amount of padding, minus the size of the item is applied after as well.
+      static const std::size_t padding_bytes = N; ///< The number of bytes of padding before the item. The same amount of padding, minus the size of the item is applied after as well.
       typedef T type;                        ///< The type of content we're storing. Assumes sizeof(T) < N.
   
       /// copy constructor
