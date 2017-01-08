@@ -1,0 +1,15 @@
+cmake_minimum_required(VERSION 3.3)
+project(FIB)
+add_compile_options(-std=c++11)
+# include_directories(${CMAKE_SOURCE_DIR})
+
+set(Boost_USE_STATIC_LIBS OFF) 
+set(Boost_USE_MULTITHREADED ON)  
+set(Boost_USE_STATIC_RUNTIME OFF) 
+find_package(Boost 1.63.0 COMPONENTS context)
+
+if(Boost_FOUND)
+    include_directories(${Boost_INCLUDE_DIRS}) 
+    add_library(fib worker.cpp) 
+    target_link_libraries(fib ${Boost_LIBRARIES})
+endif()
