@@ -8,7 +8,11 @@
 #include "worker.h"
 
 namespace fib {
-  static const double expected_task_duration = 100.0; // 0.1ms
+  /// expected duration of a task.
+  /**  If tasks tend to run longer than this then the model
+       that says we can get away with using task sharing rather than task stealing becomes
+       flawed and we don't share enough. Currently 0.1ms */
+  static const double expected_task_duration = 100.0;
 
   void worker::main() {
 // #ifdef FIB_SUPPORTS_CDS

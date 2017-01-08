@@ -2,7 +2,6 @@
 
 #include "attribute.h"
 
-// this can be useful for cache alignment
 
 namespace fib {
   namespace detail {
@@ -10,6 +9,10 @@ namespace fib {
     void deallocate_aligned_memory(void* ptr) noexcept;
   }
 
+  /// This allocator ensures all storage has at least a specified alignment.
+  ///
+  /// @param T the type of content being stored
+  /// @param alignment minimum alignment
   template <typename T, size_t alignment = 32>
   struct aligned_allocator;
 

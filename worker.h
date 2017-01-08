@@ -17,43 +17,46 @@ namespace fib {
 
   using task = std::function<void(worker&)>;
 
+  /// maximum number of workers allowed in any given pool.
   static const size_t max_workers = 16;
-  static const double task_delta = 0.0002;
 
+  /// a handle to the current worker. never give this to another thread. don't remember it across blocking calls.
+  // TODO: upgrade to support fibers
   struct worker {
-    // todo: upgrade to support fibers
     template <typename SeedSeq> worker(pool &p, int i, SeedSeq & seed) : rng(seed), i(i), p(p) {}
-    std::mt19937 rng;
-    std::deque<task> q; // local jobs
-    pool & p; // owning pool
-    int i; // worker id
+    std::mt19937 rng;   ///< local random number generator to avoid having to go back to a central pool of randomness for sharing candidate selection
+    std::deque<task> q; ///< local jobs
+    pool & p;           ///< owning pool
+    int i;              ///< worker id within the pool
+    friend pool;
+
+    /// Enqueue a task. 
+    // TODO: Should we eagerly context switch and enqueue the current fiber instead?
+    template <typename ... T, typename F> void spawn(F && f, T && ... args) {
+       q.push_back(new std::function<void(T...)>(std::forward(f), std::forward(args)...));
+    }
+  private:
+    /// private entry point
     void main();
   };
 
   struct pool {
-    // in between the time we start and the time we stop tasks are running.
-    // This provides no mechanism to detect their state, however.
-    template <typename ... Ts> pool(int N, std::mt19937 r, Ts && ... args); // give us a list of starting tasks
+    /// Create a pool
+    ///
+    /// @param N number of workers
+    /// @param rng random number generator used to seed local worker random number generators
+    /// @param args the initial batch of tasks used to seed the pool
+    template <typename ... Ts> pool(int N, std::mt19937 & rng, Ts && ... args);
+
     virtual ~pool();
 
-    int N;
-    isolated<std::atomic<task*>> s[max_workers]; // messaging primitives
-    std::vector<std::thread> threads;
-    std::atomic<bool> shutdown;
-    std::vector<worker> workers;
+    int N;                                       ///< the number of actual workers
+    isolated<std::atomic<task*>> s[max_workers]; ///< mailboxes for sharing work
+    std::vector<std::thread> threads;            ///< the threads that run the workers
+    std::atomic<bool> shutdown;                  ///< flag used to shut everything down gracefully
 
-    void run(task) {} // TODO: enqueue a task
-
-    template <typename ... T, typename F> void run(F && f, T && ... args) {
-      run(std::function<void(T...)>(std::forward(f), std::forward(args)...));
-    }
-
-    void run(int, task) {} // TODO: enqueue a task with affinity
-
-    template <typename ... T, typename F>
-    void run(int i, F && f, T && ... args) {
-      run(i, std::function<void(T...)>(std::forward(f), std::forward(args)...));
-    }
+private:
+    std::vector<worker> workers; ///< direct handles to each of our workers. not for public consumption
   };
 
   namespace detail {
@@ -62,8 +65,7 @@ namespace fib {
     };
   };
 
-  template <typename ... Ts> pool::pool(int N, std::mt19937 rng, Ts && ... args) : N(N) {
-
+  template <typename ... Ts> pool::pool(int N, std::mt19937 & rng, Ts && ... args) : N(N) {
     for (int i = 0;i < N;++i)
       s[i].data.store(&detail::dummy_task::instance, std::memory_order_relaxed);
 
