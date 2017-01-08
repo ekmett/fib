@@ -14,21 +14,34 @@ matrix:
     - os: osx
       env: COMPILER=g++
       compiler: g++
+
     - os: osx
       env: COMPILER=clang++
       compiler: clang++
+
     - os: linux
       env: COMPILER=g++-6
       compiler: g++-6
-      addons: { apt: { packages: [g++-6, libboost-all-dev libevent-dev], sources: [ubuntu-toolchain-r-test]}}
+      addons:
+        apt:
+          packages: [g++-6, libboost-all-dev, libboost-context-dev, libevent-dev]
+          sources: [ubuntu-toolchain-r-test]
+
     - os: linux
-      addons: { apt: { packages: [clang-3.6, libboost-all-dev libevent-dev], sources: [ubuntu-toolchain-r-test, llvm-toolchain-precise, llvm-toolchain-precise-3.6]}}
       env: COMPILER=clang++-3.6
       compiler: clang++-3.6
+      addons: 
+        apt:
+          packages: [clang-3.6, libboost-all-dev, libboost-context-dev, libevent-dev]
+          sources: [ubuntu-toolchain-r-test, llvm-toolchain-precise, llvm-toolchain-precise-3.6]
+
     - os: linux
-      addons: { apt: { packages: [clang-3.7, libboost-all-dev libevent-dev], sources: [ubuntu-toolchain-r-test, llvm-toolchain-precise, llvm-toolchain-precise-3.7]}}
       env: COMPILER=clang++-3.7
       compiler: clang++-3.7
+      addons:
+        apt:
+          packages: [clang-3.7, libboost-all-dev, libboost-context-dev, libevent-dev]
+          sources: [ubuntu-toolchain-r-test, llvm-toolchain-precise, llvm-toolchain-precise-3.7]
 
 before_install:
  - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
@@ -42,6 +55,10 @@ install:
  - |
    if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
      if ! brew ls --version boost &>/dev/null; then brew install boost; fi
+   fi
+ - |
+   if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
+     if ! brew ls --version libevent &>/dev/null; then brew install libevent; fi
    fi
  - |
    if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
