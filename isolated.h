@@ -5,21 +5,21 @@
 namespace fib {
   // try to ensure that T gets its own cache line.
   template <typename T, size_t N = 64> 
-  struct cache_isolated {
+  struct isolated {
     static const size_t padding_bytes = N;
 
-    cache_isolated(const cache_isolated<T,N> & that) : data(that.data) {}
+    isolated(const isolated<T,N> & that) : data(that.data) {}
 
-    cache_isolated(T && data) : data(std::forward(data)) {}
+    isolated(T && data) : data(std::forward(data)) {}
 
-    template <typename ... U> cache_isolated(U&&...args) : data(std::forward(args)...) {}
+    template <typename ... U> isolated(U&&...args) : data(std::forward(args)...) {}
 
-    template <typename U> cache_isolated & operator = (U && t) {
+    template <typename U> isolated & operator = (U && t) {
       data = t;
       return *this;
     }
 
-    cache_isolated & operator = (cache_isolated & that) {
+    isolated & operator = (isolated & that) {
       data = that.data;
       return *this;
     }

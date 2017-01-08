@@ -8,7 +8,7 @@
 #include <utility>
 #include <vector>
 
-#include "cache_isolated.h"
+#include "isolated.h"
 
 namespace fib {
 
@@ -37,7 +37,7 @@ namespace fib {
     virtual ~pool();
 
     int N;
-    cache_isolated<std::atomic<task*>> s[max_workers]; // messaging primitives
+    isolated<std::atomic<task*>> s[max_workers]; // messaging primitives
     std::vector<std::thread> threads;
     std::atomic<bool> shutdown;
     std::vector<worker> workers;
