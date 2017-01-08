@@ -6,15 +6,15 @@ matrix:
   fast_finish: true
   include:
     - os: osx
-      env: C_COMPILER=gcc CXX_COMPILER=g++
+      env: CMAKE_C_COMPILER=gcc CMAKE_CXX_COMPILER=g++
       compiler: g++
 
     - os: osx
-      env: C_COMPILER=clang CXX_COMPILER=clang++
+      env: CMAKE_C_COMPILER=clang CMAKE_CXX_COMPILER=clang++
       compiler: clang++
 
     - os: linux
-      env: C_COMPILER=gcc-6 CXX_COMPILER=g++-6
+      env: CMAKE_C_COMPILER=gcc-6 CMAKE_CXX_COMPILER=g++-6
       compiler: g++-6
       addons:
         apt:
@@ -22,7 +22,7 @@ matrix:
           sources: [ubuntu-toolchain-r-test]
 
     - os: linux
-      env: C_COMPILER=clang-3.6 CXX_COMPILER=clang++-3.6
+      env: CMAKE_C_COMPILER=clang-3.6 CMAKE_CXX_COMPILER=clang++-3.6
       compiler: clang++-3.6
       addons: 
         apt:
@@ -30,7 +30,7 @@ matrix:
           sources: [ubuntu-toolchain-r-test, llvm-toolchain-precise-3.6]
 
     - os: linux
-      env: C_COMPILER=clang-3.7 CXX_COMPILER=clang++-3.7
+      env: CMAKE_C_COMPILER=clang-3.7 CMAKE_CXX_COMPILER=clang++-3.7
       compiler: clang++-3.7
       addons:
         apt:
@@ -38,8 +38,7 @@ matrix:
           sources: [ubuntu-toolchain-r-test, llvm-toolchain-precise-3.7]
 
 before_install:
- - if [[ "${C_COMPILER}" != "" ]]; then export CC=${CC_COMPILER}; export CMAKE_C_COMPILER=${C_COMPILER}; fi
- - if [[ "${CXX_COMPILER}" != "" ]]; then export CXX=${CXX_COMPILER}; export CMAKE_CXX_COMPILER=${CXX_COMPILER}; fi
+ - ${CMAKE_C_COMPILER} -v
  - ${CMAKE_CXX_COMPILER} -v
  - cmake --version
 
@@ -52,10 +51,10 @@ install:
    if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
      if ! brew ls --version libevent &>/dev/null; then brew install libevent; fi
    fi
- - |
-   if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
-     if ! brew ls --version cmake &>/dev/null; then brew install cmake; fi
-   fi
+# - |
+#   if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
+#     if ! brew ls --version cmake &>/dev/null; then brew install cmake; fi
+#   fi
 
 script:
  - mkdir build
