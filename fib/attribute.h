@@ -3,7 +3,18 @@
 /// @file attribute.h
 /// @brief Portable support for @p __declspec and @p \__attribute__ annotations
 
+/// @defgroup macros
+/// @brief Macros
+///
+/// @{
+
 /// @defgroup declspecs __declspec support
+/// @brief Portable support for Microsoft style @p __declspec annotations
+///
+/// @code{.cpp}
+/// #include "fib/attribute.h"
+/// @endcode
+///
 /// @{
 
 // disable __declspec support on clang entirely unless we have -fms-extensions turned on
@@ -46,6 +57,12 @@
 /// @}
 
 /// @defgroup attributes __attribute__ support
+/// @brief Portable support for GCC-style @p \__attribute__ annotations
+///
+/// @code{.cpp}
+/// #include "fib/attribute.h"
+/// @endcode
+///
 /// @{
 
 /// @def __has_attribute(X)
@@ -65,7 +82,7 @@
 #endif
 
 /// @def FIB_ATTRIBUTE_MALLOC
-/// @brief portable version of gcc's @p __attribute_((malloc))
+/// @brief portable version of gcc's @p \__attribute__((malloc))
 ///
 /// Nothing in the returned memory aliases any other pointer
 #if __has_gcc_attribute(malloc)
@@ -75,7 +92,7 @@
 #endif
 
 /// @def FIB_ATTRIBUTE_RETURNS_NONNULL
-/// @brief portable version of gcc's @p __attribute_((returns_nonnull))
+/// @brief portable version of gcc's @p \__attribute__((returns_nonnull))
 ///
 /// Never returns a null pointer
 #if __has_gcc_attribute(returns_nonnull)
@@ -85,7 +102,7 @@
 #endif
 
 /// @def FIB_ATTRIBUTE_ALLOC_ALIGN
-/// @brief portable version of gcc's @p __attribute_((alloc_align(N)))
+/// @brief portable version of gcc's @p \__attribute_((alloc_align(N)))
 /// @param N the number of the argument that specifies the result alignment
 ///
 /// The result will be aligned to at least an N byte boundary
@@ -96,7 +113,7 @@
 #endif
 
 /// @def FIB_ATTRIBUTE_ALLOC_SIZE
-/// @brief portable version of gcc's @p __attribute_((alloc_size(N)))
+/// @brief portable version of gcc's @p \__attribute__((alloc_size(N)))
 /// @param N the number of the argument that specifies the result size
 ///
 /// The result will be exactly N bytes in size
@@ -107,7 +124,7 @@
 #endif
 
 /// @def FIB_ATTRIBUTE_CONST
-/// @brief portable version of gcc's @p __attribute__((const))
+/// @brief portable version of gcc's @p \__attribute__((const))
 ///
 /// Used to annotate a pure function that accesses nothing other than its inputs to compute the output
 #if __has_gcc_attribute(const)
@@ -117,7 +134,7 @@
 #endif
 
 /// @def FIB_ATTRIBUTE_PURE
-/// @brief portable version of gcc's @p __attribute__((pure))
+/// @brief portable version of gcc's @p \__attribute__((pure))
 ///
 /// The result is a pure function, and can be subjected to common subexpression elimination
 #if __has_gcc_attribute(pure)
@@ -127,7 +144,7 @@
 #endif
 
 /// @def FIB_ATTRIBUTE_WARN_UNUSED_RESULT
-/// @brief portable version of gcc's @p __attribute__((warn_unused_result))
+/// @brief portable version of gcc's @p \__attribute__((warn_unused_result))
 ///
 /// Warn if the user doesn't do something with the result of this function.
 #if __has_gcc_attribute(warn_unused_result)
@@ -135,5 +152,17 @@
 #else
 #define FIB_ATTRIBUTE_WARN_UNUSED_RESULT
 #endif
+
+/// @def FIB_ATTRIBUTE_UNUSED
+/// @brief portable version of gcc's @p \__attribute__((unused))
+///
+/// Yes, we know this is unused. Shut up, compiler.
+#if __has_gcc_attribute(unused)
+#define FIB_ATTRIBUTE_UNUSED __attribute__((unused))
+#else
+#define FIB_ATTRIBUTE_UNUSED
+#endif
+
+// @}
 
 // @}
