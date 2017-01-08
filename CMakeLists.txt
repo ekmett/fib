@@ -1,12 +1,11 @@
-cmake_minimum_required(VERSION 3.3)
+cmake_minimum_required(VERSION 3.2.2)
 project(FIB)
 add_compile_options(-std=c++11)
-# include_directories(${CMAKE_SOURCE_DIR})
 
 set(Boost_USE_STATIC_LIBS OFF) 
 set(Boost_USE_MULTITHREADED ON)  
 set(Boost_USE_STATIC_RUNTIME OFF) 
-find_package(Boost 1.62.0 COMPONENTS context)
+find_package(Boost 1.47.0 COMPONENTS context)
 
 if(Boost_FOUND)
   include_directories(${Boost_INCLUDE_DIRS}) 
