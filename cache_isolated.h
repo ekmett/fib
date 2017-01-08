@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 namespace fib {
   // try to ensure that T gets its own cache line.
   template <typename T, size_t N = 64> 
@@ -23,10 +25,10 @@ namespace fib {
     }
 
   private:
-    int8_t padding0[padding_bytes];
+    std::int8_t padding0[padding_bytes];
   public:
     T data;
   private:
-    int8_t padding1[padding_bytes - sizeof(T)];
+    std::int8_t padding1[padding_bytes - sizeof(T)];
   };
 }
