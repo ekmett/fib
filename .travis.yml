@@ -25,7 +25,7 @@ matrix:
       compiler: g++-6
       addons:
         apt:
-          packages: [g++-6, libboost-all-dev, libboost-context-dev, libevent-dev]
+          packages: [g++-6, libboost-context-dev, libevent-dev]
           sources: [ubuntu-toolchain-r-test]
 
     - os: linux
@@ -33,7 +33,7 @@ matrix:
       compiler: clang++-3.6
       addons: 
         apt:
-          packages: [clang-3.6, libboost-all-dev, libboost-context-dev, libevent-dev]
+          packages: [clang-3.6, libboost-context-dev, libevent-dev]
           sources: [ubuntu-toolchain-r-test, llvm-toolchain-precise, llvm-toolchain-precise-3.6]
 
     - os: linux
@@ -41,7 +41,7 @@ matrix:
       compiler: clang++-3.7
       addons:
         apt:
-          packages: [clang-3.7, libboost-all-dev, libboost-context-dev, libevent-dev]
+          packages: [clang-3.7, libboost-context-dev, libevent-dev]
           sources: [ubuntu-toolchain-r-test, llvm-toolchain-precise, llvm-toolchain-precise-3.7]
 
 before_install:
