@@ -84,12 +84,12 @@ install:
    if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
      if ! brew ls --version boost &>/dev/null; then brew install boost; fi
      if ! brew ls --version libevent &>/dev/null; then brew install libevent; fi
-     if [[ "${DOCS} == "ON" ]]; then
+     if [[ "${DOCS}" == "ON" ]]; then
        if ! brew ls --version doxygen &>/dev/null; then brew install doxygen; fi
      fi
    fi
  - |
-   if [[ "${DOCS} == "ON" ]]; then
+   if [[ "${DOCS}" == "ON" ]]; then
      export CMAKE_OPTIONS="$CMAKE_OPTIONS -DENABLE_DOCS=ON"
    fi
 
