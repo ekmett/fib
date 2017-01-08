@@ -3,7 +3,7 @@
 /// @file attribute.h
 /// @brief Portable support for @p __declspec and @p \__attribute__ annotations
 
-/// @defgroup macros
+/// @defgroup macros Macros
 /// @brief Macros
 ///
 /// @{
