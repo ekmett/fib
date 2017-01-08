@@ -22,12 +22,12 @@ matrix:
   include:
     - os: osx
       env: BOOST_VERSION=default
-      compiler: g++-6
+      compiler: g++
     - os: osx
       env: BOOST_VERSION=default
       compiler: clang++
     - os: linux
-      env: BOOST_VERSION=default
+      env: BOOST_VERSION=default COMPILER=g++-6
       compiler: g++-6
     - os: linux
       env: BOOST_VERSION=default
