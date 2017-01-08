@@ -1,41 +1,57 @@
 language: c++
-dist: trusty
 sudo: false
 
 matrix:
   fast_finish: true
   include:
     - os: osx
-      env: CMAKE_CXX_COMPILER=g++
       compiler: g++
+      env: CMAKE_CXX_COMPILER=g++
 
     - os: osx
-      env: CMAKE_CXX_COMPILER=clang++
       compiler: clang++
+      env: CMAKE_CXX_COMPILER=clang++
 
     - os: linux
-      env: CMAKE_CXX_COMPILER=g++-6
       compiler: g++-6
+      dist: trusty
+      env: CMAKE_CXX_COMPILER=g++-6
       addons:
         apt:
-          packages: [g++-6, libboost-context-dev, libevent-dev]
-          sources: [ubuntu-toolchain-r-test]
+          packages:
+            - g++-6
+            - libboost-context-dev
+            - libevent-dev
+          sources:
+            - ubuntu-toolchain-r-test
 
     - os: linux
-      env: CMAKE_CXX_COMPILER=clang++-3.6
       compiler: clang++-3.6
-      addons: 
-        apt:
-          packages: [clang-3.6, libboost-context-dev, libevent-dev]
-          sources: [ubuntu-toolchain-r-test, llvm-toolchain-precise-3.6]
-
-    - os: linux
-      env: CMAKE_CXX_COMPILER=clang++-3.7
-      compiler: clang++-3.7
+      dist: trusty
+      env: CMAKE_CXX_COMPILER=clang++-3.6
       addons:
         apt:
-          packages: [clang-3.7, libboost-context-dev, libevent-dev]
-          sources: [ubuntu-toolchain-r-test, llvm-toolchain-precise-3.7]
+          packages:
+            - clang-3.6
+            - libboost-context-dev
+            - libevent-dev
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise-3.6
+
+    - os: linux
+      compiler: clang++-3.7
+      dist: trusty
+      env: CMAKE_CXX_COMPILER=clang++-3.7
+      addons:
+        apt:
+          packages:
+            - clang-3.7
+            - libboost-context-dev
+            - libevent-dev
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise-3.7
 
 before_install:
  - ${CMAKE_CXX_COMPILER} -v
@@ -45,15 +61,8 @@ install:
  - |
    if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
      if ! brew ls --version boost &>/dev/null; then brew install boost; fi
-   fi
- - |
-   if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
      if ! brew ls --version libevent &>/dev/null; then brew install libevent; fi
    fi
-# - |
-#   if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
-#     if ! brew ls --version cmake &>/dev/null; then brew install cmake; fi
-#   fi
 
 script:
  - mkdir build
@@ -62,8 +71,6 @@ script:
 
 notifications:
   irc:
-    channels:
-      - "irc.freenode.org#haskell-lens"
+    channels: ["irc.freenode.org#haskell-lens"]
     skip_join: true
-    template:
-      - "\x0313fib\x0f/\x0306%{branch}\x0f \x0314%{commit}\x0f %{message} \x0302\x1f%{build_url}\x0f"
+    template: ["\x0313fib\x0f/\x0306%{branch}\x0f \x0314%{commit}\x0f %{message} \x0302\x1f%{build_url}\x0f"]
