@@ -13,7 +13,9 @@
 #endif
 
 /// @def __has_ms_declspec_attribute(X)
-/// @brief modified form of clang's @p __has_declspec_attribute that always returns 1 on Microsoft Visual C++
+/// @brief modified form of clang's @p __has_declspec_attribute
+///
+/// Always returns 1 on Microsoft Visual C++
 #ifdef _MSC_VER
 #define __has_ms_declspec_attribute(X) 1
 #else
@@ -48,7 +50,9 @@
 #endif
 
 /// @def __has_gcc_attribute(X)
-/// @brief modified form of clang's @p __has_attribute that always returns 1 on gcc
+/// @brief modified form of clang's @p __has_attribute
+///
+/// Always returns 1 on gcc. 
 #ifdef GCC
 #define __has_gcc_attribute(X) 1
 #else
@@ -57,6 +61,7 @@
 
 /// @def FIB_ATTRIBUTE_MALLOC
 /// @brief portable version of gcc's @p __attribute_((malloc))
+///
 /// Nothing in the returned memory aliases any other pointer
 #if __has_gcc_attribute(malloc)
 #define FIB_ATTRIBUTE_MALLOC __attribute__((malloc))
@@ -66,6 +71,7 @@
 
 /// @def FIB_ATTRIBUTE_RETURNS_NONNULL
 /// @brief portable version of gcc's @p __attribute_((returns_nonnull))
+///
 /// Never returns a null pointer
 #if __has_gcc_attribute(returns_nonnull)
 #define FIB_ATTRIBUTE_RETURNS_NONNULL __attribute__((returns_nonnull))
@@ -76,6 +82,7 @@
 /// @def FIB_ATTRIBUTE_ALLOC_ALIGN
 /// @brief portable version of gcc's @p __attribute_((alloc_align(N)))
 /// @param N the number of the argument that specifies the result alignment
+///
 /// The result will be aligned to at least an N byte boundary
 #if __has_gcc_attribute(alloc_align)
 #define FIB_ATTRIBUTE_ALLOC_ALIGN(N) __attribute__((alloc_align(N)))
@@ -86,6 +93,7 @@
 /// @def FIB_ATTRIBUTE_ALLOC_SIZE
 /// @brief portable version of gcc's @p __attribute_((alloc_size(N)))
 /// @param N the number of the argument that specifies the result size
+///
 /// The result will be exactly N bytes in size
 #if __has_gcc_attribute(alloc_size)
 #define FIB_ATTRIBUTE_ALLOC_SIZE(N) __attribute__((alloc_size(N)))
@@ -95,6 +103,7 @@
 
 /// @def FIB_ATTRIBUTE_CONST
 /// @brief portable version of gcc's @p __attribute__((const))
+///
 /// Used to annotate a pure function that accesses nothing other than its inputs to compute the output
 #if __has_gcc_attribute(const)
 #define FIB_ATTRIBUTE_CONST __attribute__((const))
@@ -104,6 +113,7 @@
 
 /// @def FIB_ATTRIBUTE_PURE
 /// @brief portable version of gcc's @p __attribute__((pure))
+///
 /// The result is a pure function, and can be subjected to common subexpression elimination
 #if __has_gcc_attribute(pure)
 #define FIB_ATTRIBUTE_PURE __attribute__((pure))
@@ -113,6 +123,7 @@
 
 /// @def FIB_ATTRIBUTE_WARN_UNUSED_RESULT
 /// @brief portable version of gcc's @p __attribute__((warn_unused_result))
+///
 /// Warn if the user doesn't do something with the result of this function.
 #if __has_gcc_attribute(warn_unused_result)
 #define FIB_ATTRIBUTE_WARN_UNUSED_RESULT __attribute((warn_unused_result))

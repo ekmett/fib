@@ -1,5 +1,8 @@
 #pragma once
 
+/// @file worker.h
+/// @brief work sharing
+
 #include <atomic>
 #include <deque>
 #include <functional>
