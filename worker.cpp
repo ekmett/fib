@@ -58,7 +58,7 @@ namespace fib {
 
           // don't resample time and round down to err on the side of too much sharing if tasks run long
           d = then - fib::chrono::floor<std::chrono::high_resolution_clock::duration>(
-            duration<double, std::micro>(random_delay_us(rng))
+            std::chrono::duration<double, std::micro>(random_delay_us(rng))
           );
         }
       }
