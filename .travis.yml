@@ -1,4 +1,10 @@
 language: cpp
+addons:
+    apt:
+      packages:
+        - cmake
+      sources:
+        - kalakris-cmake
 compiler:
  - clang
  - gcc
