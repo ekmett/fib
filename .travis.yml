@@ -33,46 +33,46 @@ matrix:
             - libboost-context-dev
             - libevent-dev
 
-    - os: linux
-      compiler: g++-6
-      dist: trusty
-      env: COMPILER=g++-6
-      addons:
-        apt:
-          packages:
-            - g++-6
-            - libboost-context-dev
-            - libevent-dev
-          sources:
-            - ubuntu-toolchain-r-test
-
-    - os: linux
-      compiler: clang++-3.6
-      dist: trusty
-      env: COMPILER=clang++-3.6
-      addons:
-        apt:
-          packages:
-            - clang-3.6
-            - libboost-context-dev
-            - libevent-dev
-          sources:
-            - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise-3.6
-
-    - os: linux
-      compiler: clang++-3.7
-      dist: trusty
-      env: COMPILER=clang++-3.7
-      addons:
-        apt:
-          packages:
-            - clang-3.7
-            - libboost-context-dev
-            - libevent-dev
-          sources:
-            - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise-3.7
+#    - os: linux
+#      compiler: g++-6
+#      dist: trusty
+#      env: COMPILER=g++-6
+#      addons:
+#        apt:
+#          packages:
+#            - g++-6
+#            - libboost-context-dev
+#            - libevent-dev
+#          sources:
+#            - ubuntu-toolchain-r-test
+#
+#    - os: linux
+#      compiler: clang++-3.6
+#      dist: trusty
+#      env: COMPILER=clang++-3.6
+#      addons:
+#        apt:
+#          packages:
+#            - clang-3.6
+#            - libboost-context-dev
+#            - libevent-dev
+#          sources:
+#            - ubuntu-toolchain-r-test
+#            - llvm-toolchain-precise-3.6
+#
+#    - os: linux
+#      compiler: clang++-3.7
+#      dist: trusty
+#      env: COMPILER=clang++-3.7
+#      addons:
+#        apt:
+#          packages:
+#            - clang-3.7
+#            - libboost-context-dev
+#            - libevent-dev
+#          sources:
+#            - ubuntu-toolchain-r-test
+#            - llvm-toolchain-precise-3.7
 
 before_install:
  - echo ${CC}
