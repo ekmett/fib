@@ -29,7 +29,7 @@ namespace fib {
   };
 
   struct pool {
-    // in between the time we start and the time we stop tasks are running. 
+    // in between the time we start and the time we stop tasks are running.
     // This provides no mechanism to detect their state, however.
     template <typename ... Ts> pool(int N, std::mt19937 r, Ts && ... args); // give us a list of starting tasks
     virtual ~pool();
@@ -40,13 +40,13 @@ namespace fib {
     std::atomic<bool> shutdown;
     std::vector<worker> workers;
 
-    void run(task) {} // enqueue a task
+    void run(task) {} // TODO: enqueue a task
 
     template <typename ... T, typename F> void run(F && f, T && ... args) {
       run(std::function<void(T...)>(std::forward(f), std::forward(args)...));
     }
 
-    void run(int, task) {} // enqueue a task with affinity    
+    void run(int, task) {} // TODO: enqueue a task with affinity
 
     template <typename ... T, typename F>
     void run(int i, F && f, T && ... args) {
@@ -56,7 +56,7 @@ namespace fib {
 
   namespace detail {
     struct dummy_task : task {
-      static dummy_task instance;    
+      static dummy_task instance;
     };
   };
 
@@ -77,7 +77,7 @@ namespace fib {
       // pre-load our starting tasks
       for (auto && task : { std::function<void(worker&)>(args) ... }) {
         workers[i++].q.push_front(task); // distribute tasks round-robin to start before the threads kick in
-        i %= N; 
+        i %= N;
       }
     }
 
