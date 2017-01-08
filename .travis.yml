@@ -11,6 +11,7 @@ cache:
     - ${TRAVIS_BUILD_DIR}/deps/boost-1.63.0
 
 matrix:
+  fast_finish: true
   include:
     - os: osx
       env: COMPILER=g++
