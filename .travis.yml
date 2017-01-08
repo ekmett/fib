@@ -1,15 +1,6 @@
 language: c++
 sudo: false
 
-addons:
-    apt:
-      packages:
-        - cmake
-        - g++-6
-      sources:
-        - kalakris-cmake
-        - ubuntu-toolchain-r-test
-
 cache:
   directories:
     - ${TRAVIS_BUILD_DIR}/deps/boost-1.59.0
@@ -29,6 +20,7 @@ matrix:
     - os: linux
       env: BOOST_VERSION=default COMPILER=g++-6
       compiler: g++-6
+      addons: { apt: { packages: [g++-6], sources: [ubuntu-toolchain-r-test]}}
     - os: linux
       env: BOOST_VERSION=default
       compiler: clang++
@@ -69,7 +61,7 @@ install:
 script:
  - mkdir build
  - cd build
- - cmake .. && make
+ - cmake ${CMAKE_OPTIONS} .. && make
 
 notifications:
   irc:
