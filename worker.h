@@ -8,7 +8,7 @@
 #include <utility>
 #include <vector>
 
-#include "isolated.h"
+#include "memory/isolated.h"
 
 namespace fib {
 
@@ -20,15 +20,17 @@ namespace fib {
   /// maximum number of workers allowed in any given pool.
   static const size_t max_workers = 16;
 
-  /// a handle to the current worker. never give this to another thread. don't remember it across blocking calls.
+  /// A member of a thread pool, replete with a local work-sharing deque.
+  ///
+  /// Never give this to another thread.
+  /// Do not remember the current worker across blocking calls.
   // TODO: upgrade to support fibers
   struct worker {
-    template <typename SeedSeq> worker(pool &p, int i, SeedSeq & seed) : rng(seed), i(i), p(p) {}
     std::mt19937 rng;   ///< local random number generator to avoid having to go back to a central pool of randomness for sharing candidate selection
     std::deque<task> q; ///< local jobs
     pool & p;           ///< owning pool
     int i;              ///< worker id within the pool
-    friend pool;
+    friend struct pool;
 
     /// Enqueue a task. 
     // TODO: Should we eagerly context switch and enqueue the current fiber instead?
@@ -36,10 +38,13 @@ namespace fib {
        q.push_back(new std::function<void(T...)>(std::forward(f), std::forward(args)...));
     }
   private:
+    /// construct a new worker
+    template <typename SeedSeq> worker(pool &p, int i, SeedSeq & seed) : rng(seed), i(i), p(p) {}
     /// private entry point
     void main();
   };
 
+  /// a work-sharing thread pool
   struct pool {
     /// Create a pool
     ///
@@ -51,7 +56,7 @@ namespace fib {
     virtual ~pool();
 
     int N;                                       ///< the number of actual workers
-    isolated<std::atomic<task*>> s[max_workers]; ///< mailboxes for sharing work
+    memory::isolated<std::atomic<task*>> s[max_workers]; ///< mailboxes for sharing work
     std::vector<std::thread> threads;            ///< the threads that run the workers
     std::atomic<bool> shutdown;                  ///< flag used to shut everything down gracefully
 
