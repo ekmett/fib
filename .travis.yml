@@ -62,6 +62,7 @@ install:
    else
      if ! brew ls --version cmake &>/dev/null; then brew install cmake; fi
    fi
+ - cd ..
 
 script:
  - mkdir build
