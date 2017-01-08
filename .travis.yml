@@ -5,8 +5,10 @@ addons:
     apt:
       packages:
         - cmake
+        - g++-6
       sources:
         - kalakris-cmake
+        - ubuntu-toolchain-r-test
 
 cache:
   directories:
@@ -20,16 +22,16 @@ matrix:
   include:
     - os: osx
       env: BOOST_VERSION=default
-      compiler: gcc
+      compiler: g++-6
     - os: osx
       env: BOOST_VERSION=default
-      compiler: clang
+      compiler: clang++
     - os: linux
       env: BOOST_VERSION=default
-      compiler: gcc
+      compiler: g++-6
     - os: linux
       env: BOOST_VERSION=default
-      compiler: clang
+      compiler: clang++
 
 install:
  - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
