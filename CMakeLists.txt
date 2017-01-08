@@ -1,35 +1,26 @@
 cmake_minimum_required(VERSION 3.2.2)
 project(FIB VERSION 0.1 LANGUAGES CXX)
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules")
+
+# we need c++11
 add_compile_options(-std=c++11)
 
+# optional doxygen support
 option(ENABLE_DOCS "Build Docs" OFF)
-
-set(Boost_USE_STATIC_LIBS OFF) 
-set(Boost_USE_MULTITHREADED ON)  
-set(Boost_USE_STATIC_RUNTIME OFF) 
-
-find_package(Boost 1.47.0 COMPONENTS context)
-find_package(Event)
-
 if(ENABLE_DOCS)
   find_package(Doxygen)
 endif()
 
-if(Boost_FOUND)
-  include_directories(${Boost_INCLUDE_DIRS}) 
-endif()
+# boost::context support required
+set(Boost_USE_STATIC_LIBS OFF)
+set(Boost_USE_MULTITHREADED ON)
+set(Boost_USE_STATIC_RUNTIME OFF)
+find_package(Boost 1.47.0 REQUIRED COMPONENTS context)
 
-if(Event_FOUND)
-  include_directories(${Event_INCLUDE_DIRS})
-endif()
+# libevent support
+find_package(Event REQUIRED)
 
-add_library(fib worker.cpp) 
-
-if(Boost_FOUND)
-  target_link_libraries(fib ${Boost_LIBRARIES})
-endif()
-
-if(Event_FOUND)
-  target_link_libraries(fib ${Event_LIBRARIES})
-endif()
+include_directories(${Boost_INCLUDE_DIRS} ${Event_INCLUDE_DIRS})
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBOOST_DISABLE_ASSERTS")
+add_library(fib worker.cpp)
+target_link_libraries(fib ${Boost_LIBRARIES} ${Event_LIBRARIES})

@@ -10,15 +10,16 @@ matrix:
 
     - os: osx
       compiler: clang++
-      env: COMPILER=clang++
+      env: COMPILER=clang++ DOCS=ON
 
     - os: linux
       compiler: g++
       dist: trusty
-      env: COMPILER=g++
+      env: COMPILER=g++ DOCS=ON
       addons:
         apt:
           packages:
+            - doxygen
             - libboost-context-dev
             - libevent-dev
 
@@ -83,12 +84,19 @@ install:
    if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
      if ! brew ls --version boost &>/dev/null; then brew install boost; fi
      if ! brew ls --version libevent &>/dev/null; then brew install libevent; fi
+     if [[ "${DOCS} == "ON" ]]; then
+       if ! brew ls --version doxygen &>/dev/null; then brew install doxygen; fi
+     fi
+   fi
+ - |
+   if [[ "${DOCS} == "ON" ]]; then
+     export CMAKE_OPTIONS="$CMAKE_OPTIONS -DENABLE_DOCS=ON"
    fi
 
 script:
  - mkdir build
  - cd build
- - cmake -DCMAKE_CXX_COMPILER="${COMPILER}" .. && make
+ - cmake ${CMAKE_OPTIONS} -DCMAKE_CXX_COMPILER="${COMPILER}" .. && make
 
 notifications:
   irc:
