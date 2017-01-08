@@ -20,52 +20,37 @@ matrix:
     - os: linux
       env: COMPILER=g++-6
       compiler: g++-6
-      addons: { apt: { packages: [g++-6], sources: [ubuntu-toolchain-r-test]}}
+      addons: { apt: { packages: [g++-6, libboost-all-dev libevent-dev], sources: [ubuntu-toolchain-r-test]}}
     - os: linux
-      addons: { apt: { packages: [clang-3.6], sources: [ubuntu-toolchain-r-test, llvm-toolchain-precise, llvm-toolchain-precise-3.6]}}
+      addons: { apt: { packages: [clang-3.6, libboost-all-dev libevent-dev], sources: [ubuntu-toolchain-r-test, llvm-toolchain-precise, llvm-toolchain-precise-3.6]}}
       env: COMPILER=clang++-3.6
       compiler: clang++-3.6
     - os: linux
-      addons: { apt: { packages: [clang-3.7], sources: [ubuntu-toolchain-r-test, llvm-toolchain-precise, llvm-toolchain-precise-3.7]}}
+      addons: { apt: { packages: [clang-3.7, libboost-all-dev libevent-dev], sources: [ubuntu-toolchain-r-test, llvm-toolchain-precise, llvm-toolchain-precise-3.7]}}
       env: COMPILER=clang++-3.7
       compiler: clang++-3.7
 
 before_install:
  - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
- - mkdir -p ${DEPS_DIR} && cd ${DEPS_DIR}
- - if [[ "${BOOST_VERSION}" == "" ]]; then BOOST_VERSION=1.62.0; fi
  - if [[ "${COMPILER}" != "" ]]; then export CXX=${COMPILER}; export CMAKE_CXX_COMPILER=${COMPILER}; fi
- - $CMAKE_CXX_COMPILER -v
- # show the _system_ cmake version
+ - ${CMAKE_CXX_COMPILER} -v
+ # _system_ cmake version
  - cmake --version
 
 install:
- # install modern boost
+ - mkdir -p ${DEPS_DIR} && cd ${DEPS_DIR}
  - |
-   if [[ "${BOOST_VERSION}" != "" ]]; then
-     BOOST_DIR=${DEPS_DIR}/boost-${BOOST_VERSION}
-     if [[ -z "$(ls -A ${BOOST_DIR})" ]]; then
-       if [[ "${BOOST_VERSION}" == "trunk" ]]; then
-         BOOST_URL="http://github.com/boostorg/boost.git"
-         travis_retry git clone --depth 1 --recursive --quiet ${BOOST_URL} ${BOOST_DIR} || exit 1
-         (cd ${BOOST_DIR} && ./bootstrap.sh && ./b2 headers)
-       else
-         BOOST_URL="http://sourceforge.net/projects/boost/files/boost/${BOOST_VERSION}/boost_${BOOST_VERSION//\./_}.tar.gz"
-         mkdir -p ${BOOST_DIR}
-         { travis_retry wget --quiet -O - ${BOOST_URL} | tar --strip-components=1 -xz -C ${BOOST_DIR}; } || exit 1
-       fi
-     fi
-     CMAKE_OPTIONS+=" -DBOOST_ROOT=${BOOST_DIR}"
+   if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
+     if ! brew ls --version boost &>/dev/null; then brew install boost; fi
    fi
- # install modern cmake
  - |
-   if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
+   if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then
+     if ! brew ls --version cmake &>/dev/null; then brew install cmake; fi
+   else
      CMAKE_URL="http://www.cmake.org/files/v3.5/cmake-3.5.2-Linux-x86_64.tar.gz"
      mkdir cmake && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C cmake
      export PATH=${DEPS_DIR}/cmake/bin:${PATH}
      cmake --version
-   else
-     if ! brew ls --version cmake &>/dev/null; then brew install cmake; fi
    fi
  - cd ..
 
