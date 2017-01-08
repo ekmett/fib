@@ -71,3 +71,9 @@
 #else
 #define FIB_ATTRIBUTE_PURE
 #endif
+
+#if __has_gcc_attribute(warn_unused_result)
+#define FIB_ATTRIBUTE_WARN_UNUSED_RESULT __attribute((warn_unused_result))
+#else
+#define FIB_ATTRIBUTE_WARN_UNUSED_RESULT
+#endif
