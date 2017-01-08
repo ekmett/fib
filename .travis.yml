@@ -19,10 +19,10 @@ matrix:
       compiler: g++-6
       addons: { apt: { packages: [g++-6], sources: [ubuntu-toolchain-r-test]}}
     - os: linux
-      addons: { apt: { packages: [clang-3.6], sources: [llvm-toolchain-precise-3.6]}}
+      addons: { apt: { packages: [clang-3.6], sources: [ubuntu-toolchain-r-test, llvm-toolchain-precise, llvm-toolchain-precise-3.6]}}
       compiler: clang++-3.6
     - os: linux
-      addons: { apt: { packages: [clang-3.7], sources: [llvm-toolchain-precise-3.7]}}
+      addons: { apt: { packages: [clang-3.7], sources: [ubuntu-toolchain-r-test, llvm-toolchain-precise, llvm-toolchain-precise-3.7]}}
       compiler: clang++-3.7
 
 install:
