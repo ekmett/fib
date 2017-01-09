@@ -11,3 +11,6 @@
 /// @author Edward A. Kmett
 /// @copyright (C) 2017
 /// @brief a library for light-weight fibers and polling io
+
+/// @namespace fib
+/// @brief light-weight fibers
