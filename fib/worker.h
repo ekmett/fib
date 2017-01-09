@@ -34,7 +34,7 @@ namespace fib {
     std::mt19937 rng;   ///< local random number generator to avoid having to go back to a central pool of randomness for sharing candidate selection
     std::deque<task> q; ///< local jobs
     pool & p;           ///< owning pool
-    int i;              ///< worker id within the pool
+    int id;             ///< worker id within the pool
     friend struct pool;
 
     /// Schedule a @p task.
@@ -44,9 +44,9 @@ namespace fib {
     }
   private:
     /// construct a new worker
-    template <typename SeedSeq> worker(pool &p, int i, SeedSeq & seed) : rng(seed), i(i), p(p) {}
+    template <typename SeedSeq> worker(pool &p, int id, SeedSeq & seed) : rng(seed), id(id), p(p) {}
     /// private entry point
-    void main();
+    void run();
   };
 
   /// a work-sharing thread pool
@@ -100,7 +100,7 @@ private:
 
     for (int i = 0; i < N;++i) {
       auto w = workers[i];
-      threads.push_back(std::thread([&w] { w.main(); }));
+      threads.push_back(std::thread([&w] { w.run(); }));
     }
   }
 }

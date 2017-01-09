@@ -14,7 +14,7 @@ namespace fib {
        flawed and we don't share enough. Currently 0.1ms */
   static const double expected_task_duration = 100.0;
 
-  void worker::main() {
+  void worker::run() {
 // #ifdef FIB_SUPPORTS_CDS
 //    cds_thread_attachment attach_thread;
 // #endif
@@ -27,14 +27,14 @@ namespace fib {
       if (p.shutdown.load(std::memory_order_relaxed)) return; // check for pool shutdown
       if (q.empty()) {
         // acquire
-        p.s[i].data.store(nullptr, std::memory_order_relaxed);
+        p.s[id].data.store(nullptr, std::memory_order_relaxed);
         // TODO: introduce exponential backoff here
-        task * tp = p.s[i].data.load(std::memory_order_relaxed);
+        task * tp = p.s[id].data.load(std::memory_order_relaxed);
         while (t == nullptr) {
           // unemployed
           std::this_thread::yield();
           if (p.shutdown.load(std::memory_order_relaxed)) return; // check for pool shutdown
-          tp = p.s[i].data.load(std::memory_order_relaxed);
+          tp = p.s[id].data.load(std::memory_order_relaxed);
         }
         // employed
         t = *tp;
@@ -50,7 +50,7 @@ namespace fib {
         if (then > d && !q.empty()) {
           // deal attempt
           int j = random_peer(rng);
-          if (j >= i) j += 1; // make sure it isn't us. can't wrap: j < N-1 before.
+          if (j >= id) j += 1; // make sure it isn't us. can't wrap: j < N-1 before.
 
           task * expected = nullptr;
           // compare_exchange_weak should be fine, we're already in an outer loop, we'll come back
