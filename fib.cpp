@@ -4,8 +4,8 @@
 /// all of the headers to ensure everything compiles.
 
 /// @cond PRIVATE
-namespace fib {
-  /// Without this definition, this module would otherwise produce no object file and we'd have to listen to ranlib complain
+namespace {
   FIB_ATTRIBUTE_UNUSED int lint = 0;
+  FIB_ATTRIBUTE_UNUSED fib::circular_array<int> test(10);
 }
 /// @endcond

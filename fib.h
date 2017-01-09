@@ -1,6 +1,7 @@
 #pragma once
 
 #include "fib/attribute.h"
+#include "fib/circular_array.h"
 #include "fib/chrono.h"
 #include "fib/memory.h"
 #include "fib/worker.h"
