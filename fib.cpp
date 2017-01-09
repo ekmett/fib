@@ -6,6 +6,7 @@
 /// @cond PRIVATE
 namespace {
   FIB_ATTRIBUTE_UNUSED int lint = 0;
-  FIB_ATTRIBUTE_UNUSED fib::circular_array<int> test(10);
+  FIB_ATTRIBUTE_UNUSED fib::circular_array<int> ca_test(10);
+  FIB_ATTRIBUTE_UNUSED fib::wsdeque<int> ws_test;
 }
 /// @endcond

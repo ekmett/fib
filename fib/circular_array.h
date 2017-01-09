@@ -28,7 +28,7 @@ namespace fib {
     circular_array(std::size_t N, circular_array * p = nullptr) : N(N), allocator(), previous(p) {
       assert(N > 0);
       assert((N&~N) == N); // N is a power of two
-      items = allocator.allocate(N);
+      items = reinterpret_cast<std::atomic<T>*>(allocator.allocate(N));
     }
     std::size_t size() const noexcept {
       return N;

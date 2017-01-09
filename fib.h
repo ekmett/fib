@@ -5,6 +5,7 @@
 #include "fib/chrono.h"
 #include "fib/memory.h"
 #include "fib/worker.h"
+#include "fib/wsdeque.h"
 
 /// @file fib.h
 /// @brief @ref fib
