@@ -19,37 +19,39 @@
 
 // disable __declspec support on clang entirely unless we have -fms-extensions turned on
 #if defined(__clang__) && !defined(_MSC_EXTENSIONS)
-#define __declspec(X)
-#endif
-
-/// @def __has_declspec_attribute(X)
-/// @brief clang's @p __has_declspec_attribute
-#ifndef __has_declspec_attribute
-#define __has_declspec_attribute(X) 0
-#endif
-
-/// @def __has_ms_declspec_attribute(X)
-/// @brief modified form of clang's @p __has_declspec_attribute
-///
-/// Always returns 1 on Microsoft Visual C++
-#ifdef _MSC_VER
-#define __has_ms_declspec_attribute(X) 1
+#define FIB_DECLSPEC(X)
 #else
-#define __has_ms_declspec_attribute(X) __has_declspec_attribute(X)
+#define FIB_DECLSPEC(X) __declspec(X)
+#endif
+
+/// @def FIB_HAS_DECLSPEC_ATTRIBUTE(X)
+/// @brief clang's @p __has_declspec_attribute, polyfilled to return 0 if not available
+#ifdef __has_declspec_attribute
+#define FIB_HAS_DECLSPEC_ATTRIBUTE(X) __has_declspec_attribute(X)
+#else
+#define FIB_HAS_DECLSPEC_ATTRIBUTE(X) 0
+#endif
+
+/// @def FIB_HAS_MS_DECLSPEC_ATTRIBUTE(X)
+/// @brief modified form of clang's @p __has_declspec_attribute that always returns 1 on Microsoft Visual C++
+#ifdef _MSC_VER
+#define FIB_HAS_MS_DECLSPEC_ATTRIBUTE(X) 1
+#else
+#define FIB_HAS_MS_DECLSPEC_ATTRIBUTE(X) FIB_HAS_DECLSPEC_ATTRIBUTE(X)
 #endif
 
 /// @def FIB_DECLSPEC_NOALIAS
 /// @brief portable version of @p __declspec(noalias)
-#if __has_ms_declspec_attribute(noalias)
-#define FIB_DECLSPEC_NOALIAS __declspec(noalias)
+#if FIB_HAS_MS_DECLSPEC_ATTRIBUTE(noalias)
+#define FIB_DECLSPEC_NOALIAS FIB_DECLSPEC(noalias)
 #else
 #define FIB_DECLSPEC_NOALIAS
 #endif
 
 /// @def FIB_DECLSPEC_RESTRICT
 /// @brief portable version of @p __declspec(restrict)
-#if __has_ms_declspec_attribute(restrict)
-#define FIB_DECLSPEC_RESTRICT __declspec(restrict)
+#if FIB_HAS_MS_DECLSPEC_ATTRIBUTE(restrict)
+#define FIB_DECLSPEC_RESTRICT FIB_DECLSPEC(restrict)
 #else
 #define FIB_DECLSPEC_RESTRICT
 #endif
@@ -65,27 +67,29 @@
 ///
 /// @{
 
-/// @def __has_attribute(X)
+/// @def FIB_HAS_ATTRIBUTE(X)
 /// @brief clang's @p __has_attribute
 #ifndef __has_attribute
-#define __has_attribute(X) 0
+#define FIB_HAS_ATTRIBUTE(X) 0
+#else
+#define FIB_HAS_ATTRIBUTE(X) __has_attribute(X)
 #endif
 
-/// @def __has_gcc_attribute(X)
+/// @def FIB_HAS_GCC_ATTRIBUTE(X)
 /// @brief modified form of clang's @p __has_attribute
 ///
 /// Always returns 1 on gcc. 
 #ifdef GCC
-#define __has_gcc_attribute(X) 1
+#define FIB_HAS_GCC_ATTRIBUTE(X) 1
 #else
-#define __has_gcc_attribute(X) __has_attribute(X)
+#define FIB_HAS_GCC_ATTRIBUTE(X) FIB_HAS_ATTRIBUTE(X)
 #endif
 
 /// @def FIB_ATTRIBUTE_MALLOC
 /// @brief portable version of gcc's @p \__attribute__((malloc))
 ///
 /// Nothing in the returned memory aliases any other pointer
-#if __has_gcc_attribute(malloc)
+#if FIB_HAS_GCC_ATTRIBUTE(malloc)
 #define FIB_ATTRIBUTE_MALLOC __attribute__((malloc))
 #else
 #define FIB_ATTRIBUTE_MALLOC
@@ -95,7 +99,7 @@
 /// @brief portable version of gcc's @p \__attribute__((returns_nonnull))
 ///
 /// Never returns a null pointer
-#if __has_gcc_attribute(returns_nonnull)
+#if FIB_HAS_GCC_ATTRIBUTE(returns_nonnull)
 #define FIB_ATTRIBUTE_RETURNS_NONNULL __attribute__((returns_nonnull))
 #else
 #define FIB_ATTRIBUTE_RETURNS_NONNULL
@@ -106,7 +110,7 @@
 /// @param N the number of the argument that specifies the result alignment
 ///
 /// The result will be aligned to at least an N byte boundary
-#if __has_gcc_attribute(alloc_align)
+#if FIB_HAS_GCC_ATTRIBUTE(alloc_align)
 #define FIB_ATTRIBUTE_ALLOC_ALIGN(N) __attribute__((alloc_align(N)))
 #else
 #define FIB_ATTRIBUTE_ALLOC_ALIGN(N)
@@ -117,7 +121,7 @@
 /// @param N the number of the argument that specifies the result size
 ///
 /// The result will be exactly N bytes in size
-#if __has_gcc_attribute(alloc_size)
+#if FIB_HAS_GCC_ATTRIBUTE(alloc_size)
 #define FIB_ATTRIBUTE_ALLOC_SIZE(N) __attribute__((alloc_size(N)))
 #else
 #define FIB_ATTRIBUTE_ALLOC_SIZE(N)
@@ -127,7 +131,7 @@
 /// @brief portable version of gcc's @p \__attribute__((const))
 ///
 /// Used to annotate a pure function that accesses nothing other than its inputs to compute the output
-#if __has_gcc_attribute(const)
+#if FIB_HAS_GCC_ATTRIBUTE(const)
 #define FIB_ATTRIBUTE_CONST __attribute__((const))
 #else
 #define FIB_ATTRIBUTE_CONST
@@ -137,7 +141,7 @@
 /// @brief portable version of gcc's @p \__attribute__((pure))
 ///
 /// The result is a pure function, and can be subjected to common subexpression elimination
-#if __has_gcc_attribute(pure)
+#if FIB_HAS_GCC_ATTRIBUTE(pure)
 #define FIB_ATTRIBUTE_PURE __attribute__((pure))
 #else
 #define FIB_ATTRIBUTE_PURE
@@ -147,8 +151,8 @@
 /// @brief portable version of gcc's @p \__attribute__((warn_unused_result))
 ///
 /// Warn if the user doesn't do something with the result of this function.
-#if __has_gcc_attribute(warn_unused_result)
-#define FIB_ATTRIBUTE_WARN_UNUSED_RESULT __attribute((warn_unused_result))
+#if FIB_HAS_GCC_ATTRIBUTE(warn_unused_result)
+#define FIB_ATTRIBUTE_WARN_UNUSED_RESULT __attribute__((warn_unused_result))
 #else
 #define FIB_ATTRIBUTE_WARN_UNUSED_RESULT
 #endif
@@ -157,7 +161,7 @@
 /// @brief portable version of gcc's @p \__attribute__((unused))
 ///
 /// Yes, we know this is unused. Shut up, compiler.
-#if __has_gcc_attribute(unused)
+#if FIB_HAS_GCC_ATTRIBUTE(unused)
 #define FIB_ATTRIBUTE_UNUSED __attribute__((unused))
 #else
 #define FIB_ATTRIBUTE_UNUSED
