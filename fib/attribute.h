@@ -157,6 +157,17 @@
 #define FIB_ATTRIBUTE_WARN_UNUSED_RESULT
 #endif
 
+/// @def FIB_ATTRIBUTE_ALWAYS_INLINE
+/// @brief portable version of gcc's @p \__attribute__((always_inline))
+///
+/// TODO: use __forceinline on other platforms
+#if FIB_HAS_GCC_ATTRIBUTE(always_inline)
+#define FIB_ATTRIBUTE_ALWAYS_INLINE __attribute__((always_inline))
+#else
+#define FIB_ATTRIBUTE_ALWAYS_INLINE
+#endif
+
+
 /// @def FIB_ATTRIBUTE_UNUSED
 /// @brief portable version of gcc's @p \__attribute__((unused))
 ///

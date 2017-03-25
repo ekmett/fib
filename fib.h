@@ -5,6 +5,7 @@
 #include "fib/memory.h"
 #include "fib/worker.h"
 #include "fib/wsdeque.h"
+#include "fib/rtm.h"
 
 /// @file fib.h
 /// @brief @ref fib
