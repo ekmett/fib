@@ -20,8 +20,8 @@ namespace fib {
 
   template <typename T, typename A> struct enumerator_expr {
     template <typename F> void foreach(F f) const { return static_cast<const T&>(*this).foreach(f); }
-    template <typename F> auto then(F f) -> detail::then_enumerator<T,F,A,decltype(f(A()))>;
-    template <typename F> auto map(F f) -> detail::map_enumerator<T,F,A,decltype(f(A()))>;
+    template <typename F> auto then(F f) -> detail::then_enumerator<T,F,A,decltype(f(std::declval<A>()))>;
+    template <typename F> auto map(F f) -> detail::map_enumerator<T,F,A,decltype(f(std::declval<A>()))>;
     template <typename P> detail::where_enumerator<T,P,A> where(P);
 
     operator T & () { return static_cast<T&>(*this); }
@@ -72,10 +72,10 @@ namespace fib {
   template <typename T, typename A> template <typename P> detail::where_enumerator<T,P,A> enumerator_expr<T,A>::where(P p) { 
     return detail::where_enumerator<T,P,A>(*this,p);
   }
-  template <typename T, typename A> template <typename F> auto enumerator_expr<T,A>::then(F f) -> detail::then_enumerator<T,F,A,decltype(f(A()))> {
+  template <typename T, typename A> template <typename F> auto enumerator_expr<T,A>::then(F f) -> detail::then_enumerator<T,F,A,decltype(f(std::declval<A>()))> {
     return detail::then_enumerator<T,F,A,decltype(f(A()))>(*this,f);
   }
-  template <typename T, typename A> template <typename F> auto enumerator_expr<T,A>::map(F f) -> detail::map_enumerator<T,F,A,decltype(f(A()))> {
+  template <typename T, typename A> template <typename F> auto enumerator_expr<T,A>::map(F f) -> detail::map_enumerator<T,F,A,decltype(f(std::declval<A>()))> {
     return detail::map_enumerator<T,F,A,decltype(f(A()))>(*this,f);
   }
 
@@ -128,7 +128,7 @@ namespace fib {
   };
 
   // used for iterators
-  template <typename A> auto each(A lo, A hi) -> each_enumerator<A,decltype(*lo)> { return each_enumerator<A,decltype(*lo)>(lo,hi); }
+  template <typename A> auto each(A lo, A hi) -> each_enumerator<A,decltype(*std::declval<A>())> { return each_enumerator<A,decltype(*std::declval<A>())>(lo,hi); }
   template <typename T> auto each(T container) -> each_enumerator<decltype(container.begin()),decltype(*container.begin())> {
     return each_enumerator<decltype(container.begin()), decltype(*container.begin())>(container.begin(),container.end());
   }
@@ -294,7 +294,7 @@ namespace fib {
   };
 }
 
-#if 0 // example
+#ifdef TEST_GENERATOR // example
 
 #include <iostream>
 
