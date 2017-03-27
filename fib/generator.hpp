@@ -293,3 +293,21 @@ namespace fib {
     }
   };
 }
+
+#if 0 // example
+
+#include <iostream>
+
+using namespace fib;
+
+int main(int argc, char ** argv) {
+  range_lt(1,5).map([&](auto a) { return a + 1; }).where([&] (int i) { return i % 2 == 0;}).foreach([&](auto i) {
+    std::cout << i << "\n";
+  });
+
+  enumerator<int> g(range_lt<int>(1,5)); // explicitly create a generator, rather than use a generator expression, this stuffs the computation into a fiber
+  g.foreach([&](auto i) {
+    std::cout << i << "\n";
+  });
+}
+#endif
