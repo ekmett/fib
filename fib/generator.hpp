@@ -19,16 +19,13 @@ namespace fib {
   }
 
   template <typename T, typename A> struct enumerator_expr {
-    template <typename F> void foreach(F f) const { return static_cast<const T&>(*this).foreach(f); }
+    template <typename F> void foreach(F f) { return static_cast<T&>(*this).foreach(f); }
     template <typename F> auto then(F f) -> detail::then_enumerator<T,F,A,decltype(f(std::declval<A>()))>;
     template <typename F> auto map(F f) -> detail::map_enumerator<T,F,A,decltype(f(std::declval<A>()))>;
     template <typename P> detail::where_enumerator<T,P,A> where(P);
 
     operator T & () { return static_cast<T&>(*this); }
     operator T const & () const { return static_cast<const T&>(*this); }
-
-    // T & operator ()() { return static_cast<T&>(*this); }
-    // const T & operator ()() const { return static_cast<T&>(*this); }
   };
 
   namespace detail {
@@ -39,7 +36,7 @@ namespace fib {
       then_enumerator(const then_enumerator &) = default;
       then_enumerator(then_enumerator &&) = default;
       then_enumerator(const T & m, const F & f) : m(m), f(f) {}
-      template <typename G> void foreach(G g) const {
+      template <typename G> void foreach(G g) {
         m.foreach([&](A a){ f(a).foreach(g); });
       }
     };
@@ -51,7 +48,7 @@ namespace fib {
       where_enumerator(const where_enumerator &) = default;
       where_enumerator(where_enumerator &&) = default;
       where_enumerator(const T & m, const P & p) : m(m), p(p) {}
-      template <typename G> void foreach(G g) const { 
+      template <typename G> void foreach(G g) { 
         m.foreach([&](A a) { if (p(a)) g(a); });
       }
     };
@@ -63,7 +60,7 @@ namespace fib {
       map_enumerator(const map_enumerator &) = default;
       map_enumerator(map_enumerator &&) = default;
       map_enumerator(const T & m, const F & f) : m(m), f(f) {}
-      template <typename G> void foreach(G g) const { 
+      template <typename G> void foreach(G g) { 
         m.foreach([&](A a) { g(f(a)); });
       }
     };
@@ -188,7 +185,7 @@ namespace fib {
 
   template <typename A, typename stack_allocator = boost::context::protected_fixedsize_stack> struct enumerator {
     enum status : intptr_t { complete = 0, next, bad };
-    template <typename T> enumerator(const enumerator_expr<T,A> & e) 
+    template <typename T> enumerator(enumerator_expr<T,A> && e) 
       : allocator()
       , sp(allocator.allocate())
       , last {}
